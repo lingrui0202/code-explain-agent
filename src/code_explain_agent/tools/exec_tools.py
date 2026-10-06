@@ -64,7 +64,7 @@ class RunPythonTool(Tool):
 
 
 class SaveReportTool(Tool):
-    """把解释报告写入 Markdown 文件，方便归档到作业提交包。"""
+    """把解释报告写入 Markdown 文件，便于归档或分享。"""
 
     name = "save_report"
     description = "把最终的代码解释报告写入 Markdown 文件（相对项目根目录），返回文件路径。仅在用户要求保存时调用。"

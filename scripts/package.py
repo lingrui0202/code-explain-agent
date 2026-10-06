@@ -1,12 +1,12 @@
-"""作业提交打包脚本：生成「学号姓名.zip」。
+"""打包脚本：将项目打包为 zip 归档。
 
 用法：
-    python scripts/package.py --id 10086 --name 张三
+    python scripts/package.py --name code-explain-agent
 
 特性：
-- 自动排除 .env、__pycache__、.venv、.git 等敏感/无用文件；
-- 打包前自动跑一遍单元测试，测试不过会提示（可用 --skip-tests 跳过）；
-- 输出体积检查（作业要求 < 200MB）。
+- 自动排除 .env、__pycache__、.venv、.git 等敏感或无用文件；
+- 打包前自动运行单元测试，未通过时提示（可用 --skip-tests 跳过）；
+- 输出体积超过阈值时给出提示。
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ EXCLUDE_DIRS = {
 EXCLUDE_FILES = {".env", ".DS_Store", "Thumbs.db"}
 EXCLUDE_SUFFIX = {".pyc", ".pyo", ".zip", ".rar", ".7z"}
 
-MAX_BYTES = 200 * 1024 * 1024  # 作业要求 < 200MB
+MAX_BYTES = 200 * 1024 * 1024  # 体积提示阈值
 
 
 def iter_files(root: Path):
@@ -55,9 +55,8 @@ def run_tests() -> bool:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="打包作业为 学号姓名.zip")
-    parser.add_argument("--id", required=True, help="学号，如 10086")
-    parser.add_argument("--name", required=True, help="姓名，如 张三")
+    parser = argparse.ArgumentParser(description="将项目打包为 zip")
+    parser.add_argument("--name", default="code-explain-agent", help="输出文件名（不含扩展名）")
     parser.add_argument("--output", default=None, help="输出目录，默认项目根目录")
     parser.add_argument("--skip-tests", action="store_true", help="跳过测试")
     args = parser.parse_args()
@@ -68,7 +67,7 @@ def main() -> int:
 
     out_dir = Path(args.output) if args.output else ROOT
     out_dir.mkdir(parents=True, exist_ok=True)
-    zip_path = out_dir / f"{args.id}{args.name}.zip"
+    zip_path = out_dir / f"{args.name}.zip"
 
     count = 0
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
@@ -80,12 +79,8 @@ def main() -> int:
 
     size = zip_path.stat().st_size
     print(f"\n>> 已打包 {count} 个文件 -> {zip_path}")
-    print(f">> 体积 {size / 1024 / 1024:.2f} MB" + ("（符合 <200MB 要求）" if size < MAX_BYTES else "（!! 超过 200MB）"))
-
-    if (ROOT / ".env").exists():
-        print(">> 注意：.env 已被排除，评审者需自行配置 API Key 或使用 --offline 模式")
-    else:
-        print(">> 提示：未发现 .env，建议评审者使用 --offline 模式体验完整 Agent 链路")
+    print(f">> 体积 {size / 1024 / 1024:.2f} MB" + ("" if size < MAX_BYTES else "（!! 超过 200MB）"))
+    print(">> 已排除 .env 与缓存文件，使用者需自行配置 API Key 或使用 --offline 模式")
     return 0
 
 

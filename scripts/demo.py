@@ -1,10 +1,7 @@
-"""演示脚本：连续跑 3 个问题，用于录制作业演示视频（1 分钟内）。
+"""演示脚本：连续跑 3 个预设问题，用于快速验证或演示。
 
     python scripts/demo.py                 # 离线模式，无需 API Key
     python scripts/demo.py --online        # 在线模式，需要配置 Key
-
-离线模式也会完整展示「推理 → 工具调用 → 结果整合 → 输出」链路，
-因此即使没有 Key 也能录出完整的演示视频。
 """
 
 from __future__ import annotations
