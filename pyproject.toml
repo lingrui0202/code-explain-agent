@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "code-explain-agent"
+version = "1.0.0"
+description = "面向代码解释场景的 LLM Agent：读取真实代码 → 推理 → 工具取证 → 结构化解释"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.40.0",
+    "python-dotenv>=1.0.0",
+    "rich>=13.7.0",
+    "streamlit>=1.35.0",
+]
+
+[project.scripts]
+code-explain-agent = "code_explain_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+code_explain_agent = ["py.typed"]

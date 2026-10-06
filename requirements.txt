@@ -1,0 +1,9 @@
+# 核心依赖（仅 4 个，全部可选安装）
+openai>=1.40.0          # DeepSeek / Qwen / OpenAI / Ollama 均通过 OpenAI 兼容协议接入
+python-dotenv>=1.0.0    # 读取 .env 中的 API Key
+rich>=13.7.0            # CLI 终端渲染（Markdown / 语法高亮）
+streamlit>=1.35.0       # Web 界面（仅 --web 时需要）
+
+# 说明：
+# - 若只想使用 CLI，可只装：pip install openai python-dotenv rich
+# - 若没有 API Key，可完全不安装任何依赖，使用 --offline 离线兜底模式运行
